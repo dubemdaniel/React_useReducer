@@ -1,9 +1,21 @@
 import { useState, useReducer } from "react";
 import "./App.css";
 
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "add-todo":
+      return {
+        todos: [...state.todos, { text: action.text, completed: false }],
+      };
+
+    default:
+      return state;
+  }
+};
+
 function App() {
-  // const [state, dispatch] = useReducer(reducer, { todos: [] });
-  const [text, setText] = useState(0);
+  const [{ todos }, dispatch] = useReducer(reducer, { todos: [] });
+  const [text, setText] = useState();
 
   const inputHandler = (e) => {
     const name = e.target.value;
@@ -12,6 +24,8 @@ function App() {
 
   const submitHandler = (e) => {
     e.preventDefault();
+    dispatch({ type: "add-todo", text });
+    setText("");
   };
 
   return (
@@ -19,6 +33,7 @@ function App() {
       <form onSubmit={submitHandler}>
         <input type="text" value={text} onChange={inputHandler} />
       </form>
+      <div>{JSON.stringify(todos, null, 2)}</div>
     </>
   );
 }
