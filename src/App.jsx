@@ -7,19 +7,27 @@ const reducer = (state, action) => {
       return {
         todos: [
           ...state.todos,
-          { text: action.text, completed: false, id: Math.random() },
+          {
+            title: action.value,
+            completed: false,
+            id: Date.now().toString(36),
+          },
         ],
         todosCount: state.todosCount + 1,
       };
+
     case "toggle-todo":
       return {
-        todos: state.todos.map((t, i) => {
-          i === action.i ? { ...t, completed: !t.completed } : t;
+        todos: state.todos.map((todo) => {
+          if (todo.id === action.id) {
+            return { ...todo, completed: true };
+          }
+
+          return todo;
         }),
 
-        // todosCount: state.todosCount,
+        todosCount: state.todosCount,
       };
-      console.log(completed);
 
     default:
       return state;
@@ -31,17 +39,17 @@ function App() {
     todos: [],
     todosCount: 0,
   });
-  const [text, setText] = useState("");
+  const [inputValue, setInputValue] = useState("");
 
   const inputHandler = (e) => {
     const name = e.target.value;
-    setText(name);
+    setInputValue(name);
   };
 
   const submitHandler = (e) => {
     e.preventDefault();
-    dispatch({ type: "add-todo", text });
-    setText("");
+    dispatch({ type: "add-todo", value: inputValue });
+    setInputValue("");
   };
 
   // const onClickHandler = () => {
@@ -51,21 +59,20 @@ function App() {
   return (
     <>
       <form onSubmit={submitHandler}>
-        <input type="text" value={text} onChange={inputHandler} />
+        <input type="text" value={inputValue} onChange={inputHandler} />
       </form>
       <p>you have {todosCount} todos</p>
       <div>
-        {todos.map((t, i) => (
+        {todos.map((todo) => (
           <div
-            key={t.id}
-            onClick={() => dispatch({ type: "toggle-todo", i })}
-            // style={{ textDecoration: t.completed ? "line-through" : "" }}
+            key={todo.id}
+            onClick={() => dispatch({ type: "toggle-todo", id: todo.id })}
+            style={{ textDecoration: todo.completed ? "line-through" : "" }}
           >
-            {t.text}
+            {todo.title}
           </div>
         ))}
       </div>
-      {/* <div>{JSON.stringify(todos)}</div> */}
     </>
   );
 }
