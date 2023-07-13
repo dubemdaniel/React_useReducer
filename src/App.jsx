@@ -1,4 +1,6 @@
 import { useState, useReducer } from "react";
+import AddList from "./components/AddList";
+import AddedList from "./components/AddedList";
 import "./App.css";
 
 const reducer = (state, action) => {
@@ -9,6 +11,7 @@ const reducer = (state, action) => {
           ...state.todos,
           {
             title: action.value,
+            normal: console.log("todo worked"),
             completed: false,
             id: Date.now().toString(36),
           },
@@ -20,7 +23,11 @@ const reducer = (state, action) => {
       return {
         todos: state.todos.map((todo) => {
           if (todo.id === action.id) {
-            return { ...todo, completed: true };
+            return {
+              ...todo,
+              completed: !todo.completed,
+              console: console.log("target was met"),
+            };
           }
 
           return todo;
@@ -52,27 +59,22 @@ function App() {
     setInputValue("");
   };
 
-  // const onClickHandler = () => {
-  //   dispatch({type: "toggle-todo", i})
-  // }
+  const onClickHandler = (todo) => {
+    dispatch({ type: "toggle-todo", id: todo.id });
+  };
 
   return (
     <>
-      <form onSubmit={submitHandler}>
-        <input type="text" value={inputValue} onChange={inputHandler} />
-      </form>
-      <p>you have {todosCount} todos</p>
-      <div>
-        {todos.map((todo) => (
-          <div
-            key={todo.id}
-            onClick={() => dispatch({ type: "toggle-todo", id: todo.id })}
-            style={{ textDecoration: todo.completed ? "line-through" : "" }}
-          >
-            {todo.title}
-          </div>
-        ))}
-      </div>
+      <AddList
+        value={inputValue}
+        onChange={inputHandler}
+        onSubmit={submitHandler}
+        count={todosCount}
+      ></AddList>
+      <AddedList
+        todosList={todos}
+        onClick={() => onClickHandler(todo)}
+      ></AddedList>
     </>
   );
 }
