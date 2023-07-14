@@ -7,6 +7,7 @@ const AddedList = (props) => {
         <div
           key={todo.id}
           style={{ textDecoration: todo.completed ? "line-through" : "" }}
+          onClick={() => props.onClick(todo)}
         >
           {todo.title}
         </div>

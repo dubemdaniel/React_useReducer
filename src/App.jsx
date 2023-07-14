@@ -3,6 +3,15 @@ import AddList from "./components/AddList";
 import AddedList from "./components/AddedList";
 import "./App.css";
 
+// const onClick = (callback) => {
+//   const event = { target: "auiytui" };
+//   if (typeof callback === "function") {
+//     callback(event);
+//   }
+// };
+
+// onClick(() => a);
+
 const reducer = (state, action) => {
   switch (action.type) {
     case "add-todo":
@@ -63,6 +72,12 @@ function App() {
     dispatch({ type: "toggle-todo", id: todo.id });
   };
 
+  const emptyInput = () => {
+    if (inputValue === "") {
+      return todosCount - 2;
+    }
+  };
+
   return (
     <>
       <AddList
@@ -71,10 +86,23 @@ function App() {
         onSubmit={submitHandler}
         count={todosCount}
       ></AddList>
-      <AddedList
-        todosList={todos}
-        onClick={() => onClickHandler(todo)}
-      ></AddedList>
+      <>
+        {/* {todos.map((todo) => (
+          <div
+            key={todo.id}
+            style={{ textDecoration: todo.completed ? "line-through" : "" }}
+            onClick={() => onClickHandler(todo)}
+          >
+            {todo.title}
+          </div>
+        ))} */}
+      </>
+      {emptyInput && (
+        <AddedList
+          todosList={todos}
+          onClick={(todo) => onClickHandler(todo)}
+        ></AddedList>
+      )}
     </>
   );
 }
