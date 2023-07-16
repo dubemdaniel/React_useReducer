@@ -3,15 +3,6 @@ import AddList from "./components/AddList";
 import AddedList from "./components/AddedList";
 import "./App.css";
 
-// const onClick = (callback) => {
-//   const event = { target: "auiytui" };
-//   if (typeof callback === "function") {
-//     callback(event);
-//   }
-// };
-
-// onClick(() => a);
-
 const reducer = (state, action) => {
   switch (action.type) {
     case "add-todo":
@@ -64,18 +55,14 @@ function App() {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    dispatch({ type: "add-todo", value: inputValue });
-    setInputValue("");
+    if (inputValue) {
+      dispatch({ type: "add-todo", value: inputValue });
+      setInputValue("");
+    }
   };
 
   const onClickHandler = (todo) => {
     dispatch({ type: "toggle-todo", id: todo.id });
-  };
-
-  const emptyInput = () => {
-    if (inputValue === "") {
-      return todosCount - 2;
-    }
   };
 
   return (
@@ -86,23 +73,11 @@ function App() {
         onSubmit={submitHandler}
         count={todosCount}
       ></AddList>
-      <>
-        {/* {todos.map((todo) => (
-          <div
-            key={todo.id}
-            style={{ textDecoration: todo.completed ? "line-through" : "" }}
-            onClick={() => onClickHandler(todo)}
-          >
-            {todo.title}
-          </div>
-        ))} */}
-      </>
-      {emptyInput && (
-        <AddedList
-          todosList={todos}
-          onClick={(todo) => onClickHandler(todo)}
-        ></AddedList>
-      )}
+
+      <AddedList
+        todosList={todos}
+        onClick={(todo) => onClickHandler(todo)}
+      ></AddedList>
     </>
   );
 }
